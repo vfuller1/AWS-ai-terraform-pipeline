@@ -66,7 +66,7 @@ jobs:
           echo "pr_number=0" >> "$GITHUB_OUTPUT"
 
   fix:
-    if: github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'terraform-ai: fix it')
+    if: "github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'terraform-ai: fix it')"
     runs-on: ubuntu-latest
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

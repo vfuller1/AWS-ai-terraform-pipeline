@@ -16,18 +16,23 @@ A multi-agent AI system that manages the full lifecycle of AWS infrastructure wi
 ## Project Layout
 
 ```text
-terraform-ai-capstone/
-├── agents/
-├── workflows/
-├── rag/
-├── terraform/
-├── evals/
-├── .github/workflows/
-├── .env.example
-├── .gitignore
-├── requirements.txt
-└── README.md
+AWS-ai-terraform-pipeline/
+├── .github/workflows/      # GitHub Actions entry point (must stay at repo root)
+└── terraform-ai/
+    ├── agents/
+    ├── workflows/
+    ├── rag/
+    ├── terraform/
+    ├── evals/
+    ├── .env.example
+    ├── .gitignore
+    ├── requirements.txt
+    └── README.md
 ```
+
+Note: GitHub Actions only discovers workflow files under a repo-root `.github/workflows/`,
+so the workflow YAML files live at the repository root and set
+`defaults.run.working-directory: terraform-ai` to resolve `requirements.txt`/`workflows/`/`agents/` paths.
 
 ## Workflow 1: Provisioning
 Path: `workflows/provisioning_graph.py`
