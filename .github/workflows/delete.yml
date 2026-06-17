@@ -4,9 +4,13 @@ on:
   issue_comment:
     types: [created]
 
+defaults:
+  run:
+    working-directory: terraform-ai
+
 jobs:
   impact:
-    if: startsWith(github.event.comment.body, 'terraform-ai: delete')
+    if: "startsWith(github.event.comment.body, 'terraform-ai: delete')"
     runs-on: ubuntu-latest
     outputs:
       pr_number: ${{ steps.outputs_step.outputs.pr_number }}

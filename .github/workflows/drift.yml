@@ -5,6 +5,10 @@ on:
     - cron: '0 8 * * *'
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: terraform-ai
+
 jobs:
   drift:
     runs-on: ubuntu-latest
