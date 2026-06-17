@@ -1,0 +1,67 @@
+description: terraform-ai-capstone naming evals
+prompts:
+  - |
+    Generate one AWS resource name following this format: {env}-{team}-{resource_type}-{descriptor}.
+    Constraints:
+    - lowercase letters, numbers, hyphens
+    - max 63 chars
+    - starts with a letter
+    Input: {{input}}
+providers:
+  - openai:gpt-4o-mini
+tests:
+  - vars:
+      input: EC2 instance name for prod api orders service
+    assert:
+      - type: regex
+        value: ^[a-z][a-z0-9-]{0,61}[a-z0-9]$
+      - type: contains
+        value: ec2
+      - type: javascript
+        value: output.length <= 63
+      - type: not-contains
+        value: _
+  - vars:
+      input: S3 bucket name for dev data raw logs
+    assert:
+      - type: regex
+        value: ^[a-z][a-z0-9-]{0,61}[a-z0-9]$
+      - type: contains
+        value: s3
+      - type: javascript
+        value: output.length <= 63
+      - type: not-contains
+        value: _
+  - vars:
+      input: VPC name for staging infrastructure core network
+    assert:
+      - type: regex
+        value: ^[a-z][a-z0-9-]{0,61}[a-z0-9]$
+      - type: contains
+        value: vpc
+      - type: javascript
+        value: output.length <= 63
+      - type: not-contains
+        value: _
+  - vars:
+      input: Security group name for prod security web ingress
+    assert:
+      - type: regex
+        value: ^[a-z][a-z0-9-]{0,61}[a-z0-9]$
+      - type: contains
+        value: sg
+      - type: javascript
+        value: output.length <= 63
+      - type: not-contains
+        value: _
+  - vars:
+      input: Extremely long resource descriptor for operations team to validate max length enforcement on ec2
+    assert:
+      - type: regex
+        value: ^[a-z][a-z0-9-]{0,61}[a-z0-9]$
+      - type: contains
+        value: ec2
+      - type: javascript
+        value: output.length <= 63
+      - type: not-contains
+        value: _
