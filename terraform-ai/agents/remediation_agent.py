@@ -5,7 +5,7 @@ import os
 
 from github import Github
 
-from agents.llm_utils import get_llm
+from agents.llm_utils import extract_code_block, get_llm
 from agents.state import DriftState
 
 # CAPSTONE: Agent → Action
@@ -26,7 +26,7 @@ def remediation_agent(state: DriftState) -> DriftState:
             f"{json.dumps(details)}"
         )
         response = llm.invoke(prompt)
-        corrected_hcl = str(response.content)
+        corrected_hcl = extract_code_block(str(response.content))
         print("[remediation_agent] Generated corrected HCL")
     except Exception as exc:
         print(f"[remediation_agent] Failed to generate corrected HCL, using fallback: {exc}")
