@@ -7,7 +7,7 @@ from langchain_aws import ChatBedrockConverse
 
 _FENCE_RE = re.compile(r"```(?:\w+)?\s*\n(.*?)```", re.DOTALL)
 
-DEFAULT_BEDROCK_MODEL_ID = "anthropic.claude-3-5-sonnet-20241022-v2:0"
+DEFAULT_BEDROCK_MODEL_ID = "us.anthropic.claude-sonnet-4-6"
 
 
 def extract_code_block(text: str) -> str:
