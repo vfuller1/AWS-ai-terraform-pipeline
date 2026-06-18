@@ -37,7 +37,7 @@ jobs:
 
       - name: Run delete workflow (impact stage)
         run: |
-          python workflows/delete_graph.py "${{ github.event.comment.body }}"
+          python -m workflows.delete_graph "${{ github.event.comment.body }}"
 
       - name: Export outputs
         id: outputs_step

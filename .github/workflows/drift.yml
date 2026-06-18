@@ -40,4 +40,4 @@ jobs:
 
       - name: Run drift workflow
         run: |
-          python workflows/drift_graph.py
+          python -m workflows.drift_graph
