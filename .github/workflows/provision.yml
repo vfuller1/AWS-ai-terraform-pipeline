@@ -57,7 +57,7 @@ jobs:
           if [ -z "$REQUEST" ] && [ "${{ github.event_name }}" = "issue_comment" ]; then
             REQUEST="${{ github.event.comment.body }}"
           fi
-          python workflows/provisioning_graph.py "$REQUEST"
+          python -m workflows.provisioning_graph "$REQUEST"
 
       - name: Extract PR number
         id: extract
