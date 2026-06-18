@@ -3,8 +3,9 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+import boto3
 import chromadb
-from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+from chromadb.utils.embedding_functions import AmazonBedrockEmbeddingFunction
 
 
 def _split_sections(markdown_text: str) -> list[str]:
@@ -41,24 +42,22 @@ def main() -> None:
     print(f"[ingest] Loaded {len(chunks)} chunks from naming conventions")
 
     client = chromadb.PersistentClient(path=str(chroma_path))
-    embedding_fn = OpenAIEmbeddingFunction(
-        api_key=os.getenv("OPENAI_API_KEY", ""),
-        model_name="text-embedding-3-small",
+    session = boto3.Session(region_name=os.getenv("AWS_DEFAULT_REGION", "us-east-1"))
+    embedding_fn = AmazonBedrockEmbeddingFunction(
+        session=session,
+        model_name=os.getenv("BEDROCK_EMBEDDING_MODEL_ID", "amazon.titan-embed-text-v1"),
     )
+
+    try:
+        # Drop any collection built with a previous (different-dimension) embedding function.
+        client.delete_collection("naming_conventions")
+    except Exception:
+        pass
 
     collection = client.get_or_create_collection("naming_conventions", embedding_function=embedding_fn)
 
     ids = [f"naming-rule-{i+1}" for i in range(len(chunks))]
     metadatas = [{"source": "rag/naming_conventions.md", "chunk": i + 1} for i in range(len(chunks))]
-
-    try:
-        # Replace previous contents to keep ingestion deterministic.
-        existing = collection.get(include=[])
-        existing_ids = existing.get("ids", [])
-        if existing_ids:
-            collection.delete(ids=existing_ids)
-    except Exception:
-        pass
 
     collection.add(ids=ids, documents=chunks, metadatas=metadatas)
 

@@ -3,10 +3,11 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+import boto3
 import chromadb
-from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
-from langchain_openai import ChatOpenAI
+from chromadb.utils.embedding_functions import AmazonBedrockEmbeddingFunction
 
+from agents.llm_utils import get_llm
 from agents.state import ProvisioningState
 
 # CAPSTONE: Agent → Tool
@@ -30,9 +31,10 @@ def naming_rag_agent(state: ProvisioningState) -> ProvisioningState:
         base_dir = Path(__file__).resolve().parent.parent
         chroma_path = str(base_dir / "rag" / "chroma_store")
         client = chromadb.PersistentClient(path=chroma_path)
-        embedding_fn = OpenAIEmbeddingFunction(
-            api_key=os.getenv("OPENAI_API_KEY", ""),
-            model_name="text-embedding-3-small",
+        session = boto3.Session(region_name=os.getenv("AWS_DEFAULT_REGION", "us-east-1"))
+        embedding_fn = AmazonBedrockEmbeddingFunction(
+            session=session,
+            model_name=os.getenv("BEDROCK_EMBEDDING_MODEL_ID", "amazon.titan-embed-text-v1"),
         )
         collection = client.get_collection("naming_conventions", embedding_function=embedding_fn)
         query_text = (
@@ -50,7 +52,7 @@ def naming_rag_agent(state: ProvisioningState) -> ProvisioningState:
     next_state["naming_rules"] = rules
 
     try:
-        llm = ChatOpenAI(model="gpt-4o", temperature=0)
+        llm = get_llm()
         prompt = (
             "Generate a single AWS resource name compliant with these rules:\n"
             f"Rules: {rules}\n"

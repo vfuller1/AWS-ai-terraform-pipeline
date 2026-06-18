@@ -16,7 +16,6 @@ jobs:
       pr_number: ${{ steps.outputs_step.outputs.pr_number }}
       dependency_status: ${{ steps.outputs_step.outputs.dependency_status }}
     env:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_REPO: ${{ github.repository }}
       GITHUB_ACTOR: ${{ github.actor }}
@@ -54,7 +53,6 @@ jobs:
       needs.impact.outputs.dependency_status != 'block' &&
       startsWith(github.event.comment.body, 'delete ')
     env:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_REPO: ${{ github.repository }}
       GITHUB_ACTOR: ${{ github.actor }}
