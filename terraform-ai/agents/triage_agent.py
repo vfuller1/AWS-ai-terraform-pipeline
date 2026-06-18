@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import json
 
-from langchain_openai import ChatOpenAI
-
+from agents.llm_utils import get_llm
 from agents.state import DriftState
 
 # CAPSTONE: Agent → Decision
@@ -28,7 +27,7 @@ def triage_agent(state: DriftState) -> DriftState:
     )
 
     try:
-        llm = ChatOpenAI(model="gpt-4o", temperature=0)
+        llm = get_llm()
         response = llm.invoke(prompt)
         decision = str(response.content).strip().lower()
         if decision not in {"auto-remediate", "open-pr", "alert-only"}:

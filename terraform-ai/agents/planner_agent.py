@@ -7,9 +7,7 @@ import tempfile
 from datetime import date
 from pathlib import Path
 
-from langchain_openai import ChatOpenAI
-
-from agents.llm_utils import extract_code_block
+from agents.llm_utils import extract_code_block, get_llm
 from agents.state import ProvisioningState
 
 # CAPSTONE: Agent → Action
@@ -57,7 +55,7 @@ def planner_agent(state: ProvisioningState) -> ProvisioningState:
 
     hcl = ""
     try:
-        llm = ChatOpenAI(model="gpt-4o", temperature=0)
+        llm = get_llm()
         response = llm.invoke(prompt)
         hcl = extract_code_block(str(response.content))
         print("[planner_agent] LLM produced Terraform HCL")

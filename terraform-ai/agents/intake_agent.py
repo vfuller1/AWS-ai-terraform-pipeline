@@ -5,10 +5,9 @@ from typing import Any
 
 from langchain.output_parsers import PydanticOutputParser
 from langchain_core.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
-from agents.llm_utils import extract_code_block
+from agents.llm_utils import extract_code_block, get_llm
 from agents.state import ProvisioningState
 
 # CAPSTONE: Agent → Decision
@@ -41,7 +40,7 @@ def intake_agent(state: ProvisioningState) -> ProvisioningState:
 
     parsed: IntakeExtraction | None = None
     try:
-        llm = ChatOpenAI(model="gpt-4o", temperature=0)
+        llm = get_llm()
         response = llm.invoke(prompt.format(user_request=user_request))
         parsed = parser.parse(extract_code_block(str(response.content)))
         print("[intake_agent] LLM extraction successful")

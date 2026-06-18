@@ -4,9 +4,8 @@ import json
 import os
 
 from github import Github
-from langchain_openai import ChatOpenAI
 
-from agents.llm_utils import extract_code_block
+from agents.llm_utils import extract_code_block, get_llm
 from agents.state import ProvisioningState
 
 # CAPSTONE: Agent → Decision
@@ -51,7 +50,7 @@ def repo_review_agent(state: ProvisioningState) -> ProvisioningState:
     }
 
     try:
-        llm = ChatOpenAI(model="gpt-4o", temperature=0)
+        llm = get_llm()
         response = llm.invoke(json.dumps(decision_prompt))
         parsed = json.loads(extract_code_block(str(response.content)))
         next_state["connectivity_needed"] = bool(parsed.get("connectivity_needed", False))

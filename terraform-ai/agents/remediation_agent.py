@@ -4,8 +4,8 @@ import json
 import os
 
 from github import Github
-from langchain_openai import ChatOpenAI
 
+from agents.llm_utils import get_llm
 from agents.state import DriftState
 
 # CAPSTONE: Agent → Action
@@ -20,7 +20,7 @@ def remediation_agent(state: DriftState) -> DriftState:
     corrected_hcl = 'resource "null_resource" "drift_remediation" {}\n'
 
     try:
-        llm = ChatOpenAI(model="gpt-4o", temperature=0)
+        llm = get_llm()
         prompt = (
             "Generate corrected Terraform HCL based on this drift detail JSON. Return only HCL.\n"
             f"{json.dumps(details)}"

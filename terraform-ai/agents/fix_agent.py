@@ -3,9 +3,8 @@ from __future__ import annotations
 import os
 
 from github import Github
-from langchain_openai import ChatOpenAI
 
-from agents.llm_utils import extract_code_block
+from agents.llm_utils import extract_code_block, get_llm
 from agents.state import ProvisioningState
 
 # CAPSTONE: Agent → Action
@@ -23,7 +22,7 @@ def fix_agent(state: ProvisioningState) -> ProvisioningState:
         return next_state
 
     try:
-        llm = ChatOpenAI(model="gpt-4o", temperature=0)
+        llm = get_llm()
         prompt = (
             "Fix this Terraform HCL based on the plan error. Return only corrected HCL.\n\n"
             f"Plan error:\n{next_state.get('plan_error', '')}\n\n"

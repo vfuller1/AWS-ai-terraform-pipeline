@@ -19,7 +19,6 @@ jobs:
     outputs:
       pr_number: ${{ steps.extract.outputs.pr_number }}
     env:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_REPO: ${{ github.repository }}
       GITHUB_ACTOR: ${{ github.actor }}
@@ -69,10 +68,12 @@ jobs:
     if: "github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'terraform-ai: fix it')"
     runs-on: ubuntu-latest
     env:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_REPO: ${{ github.repository }}
       GITHUB_ACTOR: ${{ github.actor }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     steps:
       - uses: actions/checkout@v4
 
@@ -94,7 +95,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_REPO: ${{ github.repository }}
       GITHUB_ACTOR: ${{ github.actor }}
